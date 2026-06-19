@@ -3,20 +3,19 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
 
+const groupRoutes = require('./routes/group')
+
 const app = express()
 
-// Middleware
-// These run on EVERY incoming request, in order, before your routes
-app.use(cors())              // Allow cross-origin requests from your React frontend
-app.use(express.json())      // Parse incoming JSON request bodies (req.body won't work without this)
+app.use(cors())
+app.use(express.json())
 
-// Routes (we'll add real ones soon)
+app.use('/api/groups', groupRoutes)
+
 app.get('/', (req, res) => {
   res.json({ message: 'SplitEase API is running' })
 })
 
-// Connect to MongoDB, then start the server
-// We wait for the DB before accepting requests — good practice
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -27,5 +26,5 @@ mongoose
   })
   .catch((err) => {
     console.error('MongoDB connection failed:', err.message)
-    process.exit(1) // Exit the process if DB fails — no point running without it
+    process.exit(1)
   })
